@@ -1,16 +1,3 @@
-// function multiplyNumbersThatSumTo2020(numbers) {
-//   const start = new Date();
-//   for (let i = 0, number = numbers[0]; i < numbers.length; i++, number = numbers[i]) {
-//     const remainder = 2020 - number;
-//     if (numbers.includes(remainder)) {
-//       console.log('number', number)
-//       console.log('remainder', remainder)
-//       console.log('time taken', new Date() - start)
-//       return number * remainder;
-//     }
-//   }
-// }
-
 function multiplyNumbersThatSumTo2020(numbers) {
   const sumsMap = numbers.reduce((acc, number) => {
     const remainder = 2020 - number;
