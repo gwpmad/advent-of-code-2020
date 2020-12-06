@@ -1,4 +1,3 @@
-const { count } = require('console');
 const fs = require('fs');
 
 function countValidPasswords(input) {
