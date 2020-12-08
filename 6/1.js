@@ -6,7 +6,9 @@
     const form = forms[i].replace(/\n/g, '');
   instead of just skiping the newline like we do:
     if (char === '\n' || groupQuestionsAnswered.has(char)) continue;
-  it slows things down significantly - so the small extra string loop for each form matters. 
+  it slows things down significantly - so the small extra string loop for each form matters.
+
+  Also, using {} for formQuestionsAnswered instead of a set halves the speed - sets are fast.
   */
 
 const fs = require('fs');
