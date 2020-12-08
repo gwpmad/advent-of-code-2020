@@ -9,11 +9,11 @@
   it slows things down significantly - so the small extra string loop for each form matters.
 
   Also, using {} for formQuestionsAnswered instead of a set halves the speed - sets are fast.
-  */
+*/
 
 const fs = require('fs');
  
-const forms = fs.readFileSync(__dirname + '/input', 'utf8');
+const formsInput = fs.readFileSync(__dirname + '/input', 'utf8');
 
 function getSumOfGroupsQuestionCountsWithSingleLoop(input) {
   const formQuestionsAnswered = new Set();
@@ -36,7 +36,7 @@ function getSumOfGroupsQuestionCountsWithSingleLoop(input) {
   return sumOfCounts;
 }
 
-console.log(getSumOfGroupsQuestionCountsWithSingleLoop(forms));
+console.log(getSumOfGroupsQuestionCountsWithSingleLoop(formsInput));
 
 
 function getSumOfGroupsQuestionCountsWithMultipleLoops(input) {
@@ -58,4 +58,4 @@ function getSumOfGroupsQuestionCountsWithMultipleLoops(input) {
   return sumOfCounts;
 }
 
-console.log(getSumOfGroupsQuestionCountsWithMultipleLoops(forms));
+console.log(getSumOfGroupsQuestionCountsWithMultipleLoops(formsInput));
