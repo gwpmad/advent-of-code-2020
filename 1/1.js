@@ -1,6 +1,6 @@
 function multiplyNumbersThatSumTo2020(numbers) {
   const numbersMap = {};
-  for (let i = 0; i < 1000000; i++) {
+  for (let i = 0; i < numbers.length; i++) {
     const number = numbers[i];
     const remainder = 2020 - number;
     if (numbersMap[remainder]) return number * remainder;
@@ -10,7 +10,7 @@ function multiplyNumbersThatSumTo2020(numbers) {
 
 function multiplyNumbersThatSumTo2020WithSet(numbers) {
   const numbersSet = new Set();
-  for (let i = 0; i < 1000000; i++) {
+  for (let i = 0; i < numbers.length; i++) {
     const number = numbers[i];
     const remainder = 2020 - number;
     if (numbersSet.has(remainder)) return number * remainder;
