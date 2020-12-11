@@ -24,25 +24,35 @@ function executeInstructionsUpToRepeat(instructions) {
   return results;
 }
 
-function findNextJmpOrNopIdx(array, startIdx) {
+function findNextJmpOrNopIdx(array, switchedBefore, changeIdx) {
+  let startIdx;
+  if (!switchedBefore) {
+    startIdx = 0;
+  } else {
+    startIdx = changeIdx + 2
+  }
+  
   for (let i = startIdx; i < array.length; i+=2) {
     if (['jmp', 'nop'].includes(array[i])) return i;
   }
   return -1;
 }
 
-function switchJmpAndNop(array, idx) {
+function switchJmpAndNop(array, switchedBefore, idx) {
+  if (!switchedBefore) return;
   array[idx] = array[idx] === 'jmp' ? 'nop' : 'jmp';
 }
 
 function fixInfiniteLoopAndCalculateAcc(input) {
   const instructions = input.match(/[a-z]+|((\+|\-)\d+)/g);
-  let changeIdx = -2;
+  let switchedBefore = false, changeIdx;
   let results = executeInstructionsUpToRepeat(instructions);
   while (results.infinite) {
-    if (changeIdx > -2) switchJmpAndNop(instructions, changeIdx);
-    changeIdx = findNextJmpOrNopIdx(instructions, changeIdx + 2);
-    switchJmpAndNop(instructions, changeIdx);
+    switchJmpAndNop(instructions, switchedBefore, changeIdx);
+    changeIdx = findNextJmpOrNopIdx(instructions, switchedBefore, changeIdx);
+
+    switchedBefore = true;
+    switchJmpAndNop(instructions, switchedBefore, changeIdx);
     results = executeInstructionsUpToRepeat(instructions);
   }
   return results.acc;
