@@ -19,13 +19,12 @@ function getFirstNumberThatIsNotSum(input) {
 function checkPreamble(preamble, number) {
   const results = {};
   const iterator = preamble.values();
-  let next = iterator.next(), hasRemainder;
+  let next = iterator.next();
   results.preambleFirstValue = next.value;
 
   while (!next.done) {
     const remainder = number - next.value;
-    hasRemainder = preamble.has(remainder) && (remainder !== next.value);
-    if (hasRemainder) break;
+    if (preamble.has(remainder) && (remainder !== next.value)) break;
     next = iterator.next();
   }
 
