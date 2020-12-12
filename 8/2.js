@@ -20,7 +20,6 @@ function executeInstructionsUpToRepeat(instructions) {
     }
     i+=2;
   }
-
   return results;
 }
 
