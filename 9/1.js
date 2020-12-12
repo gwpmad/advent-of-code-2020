@@ -8,23 +8,26 @@ function getFirstNumberThatIsNotSum(input) {
   const preamble = new Set(numbers.slice(0, PREAMBLE_SIZE));
 
   for (let i = PREAMBLE_SIZE; i < numbers.length; i++) {
-    const { winner, preambleFirstValue } = checkPreamble(preamble, numbers[i]);
-    if (winner) return numbers[i];
+    const number = numbers[i];
+    const { winner, preambleFirstValue } = checkPreamble(preamble, number);
+    if (winner) return number;
     preamble.delete(preambleFirstValue);
-    preamble.add(numbers[i]);
+    preamble.add(number);
   }
 }
 
 function checkPreamble(preamble, number) {
-  const results = { winner: false };
+  const results = {};
   const iterator = preamble.values();
-  let next = iterator.next(), remainder;
+  let next = iterator.next(), hasRemainder;
   results.preambleFirstValue = next.value;
 
-  do {
-    remainder = number - next.value;
+  while (!next.done) {
+    const remainder = number - next.value;
+    hasRemainder = preamble.has(remainder) && (remainder !== next.value);
+    if (hasRemainder) break;
     next = iterator.next();
-  } while (!preamble.has(remainder) && !next.done);
+  }
 
   if (next.done) results.winner = true;
   return results;
