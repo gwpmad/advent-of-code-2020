@@ -1,6 +1,23 @@
 const fs = require('fs');
 const seats = fs.readFileSync(__dirname + '/input', 'utf8');
 
+function getInitialSeatState(input) {
+  const rows = input.split('\n');
+  const state = { graph: {}, occupiedSeats: 0, visitQueue: [], visitedSeats: new Set() };
+  for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
+    const row = rows[rowIdx];
+    for (let colIdx = 0; colIdx < row.length; colIdx++) {
+      const type = row[colIdx] === 'L' ? 'empty' : 'floor';
+      state.graph[getSlotName([rowIdx, colIdx])] = {
+        type,
+        newType: type,
+        surroundingSeats: getSurroundingSeats(rowIdx, colIdx, row.length, rows.length),
+      };
+    }
+  }
+  return state;
+}
+
 function getSlotName([rowIdx, colIdx]) {
   return `${rowIdx}-${colIdx}`;
 }
@@ -16,28 +33,12 @@ function getSurroundingSeats(rowIdx, colIdx, numberOfColumns, numberOfRows) {
     [rowBelow, leftCol],
     [rowBelow, colIdx],
     [rowBelow, rightCol],
-  ].filter(([_rowIdx, _colIdx]) =>
-    _colIdx > -1 && _colIdx < numberOfColumns
-    && _rowIdx > -1 && _rowIdx < numberOfRows
-  ).map(getSlotName);
-}
-
-function getInitialSeatState(input) {
-  const rows = input.split('\n');
-  const state = { graph: new Map(), occupiedSeats: 0, visitQueue: [], visitedSeats: new Set() };
-  for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
-    const row = rows[rowIdx];
-    for (let colIdx = 0; colIdx < row.length; colIdx++) {
-      const type = row[colIdx] === 'L' ? 'empty' : 'floor';
-      state.graph[getSlotName([rowIdx, colIdx])] = {
-        type,
-        newType: type,
-        surroundingSeats: getSurroundingSeats(rowIdx, colIdx, row.length, rows.length),
-      };
-    }
+  ].reduce((seats, [_rowIdx, _colIdx]) => {
+      if (_rowIdx < 0 || _rowIdx >= numberOfRows) return seats;
+      if (_colIdx < 0 || _colIdx >= numberOfColumns) return seats;
+      return seats.concat(getSlotName([_rowIdx, _colIdx]))
+    }, []);
   }
-  return state;
-}
 
 function applyRules(seat, seatState) {
   if (seat.type === 'floor') return;
