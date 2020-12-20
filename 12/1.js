@@ -1,7 +1,6 @@
 const fs = require('fs');
 
 const rawInstructions = fs.readFileSync(__dirname + '/input', 'utf8');
-const EAST = 'E', WEST = 'W', NORTH = 'N', SOUTH = 'S'; LEFT = 'L', RIGHT = 'R', FORWARD = 'F';
 
 function calculateManhattanDistance(input) {
   const ferry = ferryStateMachineFactory();
@@ -14,6 +13,8 @@ function calculateManhattanDistance(input) {
 }
 
 function ferryStateMachineFactory () {
+  const EAST = 'E', WEST = 'W', NORTH = 'N', SOUTH = 'S'; LEFT = 'L', RIGHT = 'R', FORWARD = 'F';
+
   return {
     directionOrder: [EAST, SOUTH, WEST, NORTH],
     xAxis: 0,
@@ -35,7 +36,7 @@ function ferryStateMachineFactory () {
     },
 
     followInstruction(action, value) { this[action](Number(value)); },
-    get manhattanDistance() { return Math.abs(this.xAxis) + Math.abs(this.yAxis) }
+    get manhattanDistance() { return Math.abs(this.xAxis) + Math.abs(this.yAxis); }
   };
 }
 
