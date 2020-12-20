@@ -27,8 +27,8 @@ function ferryStateMachineFactory () {
     [NORTH]: function(value) { this.yAxis += value; },
     [FORWARD]: function(value) { this[this.facing](value) },
 
-    [LEFT]: function(degrees) { this._turnClockwise(360 - degrees) },
-    [RIGHT]: function(degrees) { this._turnClockwise(degrees) },
+    [LEFT]: function(degrees) { this._turnClockwise(360 - degrees); },
+    [RIGHT]: function(degrees) { this._turnClockwise(degrees); },
     _turnClockwise (degrees) {
       const quarterCircles = (degrees / 360) * 4;
       const newFacingIdx = (this.directionOrder.indexOf(this.facing) + quarterCircles) % 4;

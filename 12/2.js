@@ -28,14 +28,14 @@ function ferryFactory () {
       this.location.y += (this.waypoint.y * value);
     },
 
-    [LEFT]: function(degrees) { this._rotateWaypointClockwise(360 - degrees) },
-    [RIGHT]: function(degrees) { this._rotateWaypointClockwise(degrees) },
+    [LEFT]: function(degrees) { this._rotateWaypointClockwise(360 - degrees); },
+    [RIGHT]: function(degrees) { this._rotateWaypointClockwise(degrees); },
     _rotateWaypointClockwise (degrees) {
       const quarterCircles = (degrees / 360) *  4;
       for (let i = 0; i < quarterCircles; i++) {
-        const initialX = this.waypoint.x;
+        const newYValue = this.waypoint.x * -1;
         this.waypoint.x = this.waypoint.y;
-        this.waypoint.y = initialX * -1;
+        this.waypoint.y = newYValue;
       }
     },
 
