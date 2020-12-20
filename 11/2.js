@@ -5,7 +5,7 @@ const FLOOR = '.', OCCUPIED = '#', VACANT = 'L';
 
 function countChairsAfterChanges(input) {
   let chairs = input.split('\n').map(l => l.split(''));
-  let newChairs = cloneChairs(chairs);
+  const newChairs = cloneChairs(chairs);
   let occupiedChairsBefore = 0, occupiedChairs = 0;
   const incrementOccupiedChairs = increment => occupiedChairs += increment;
 

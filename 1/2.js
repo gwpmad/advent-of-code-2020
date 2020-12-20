@@ -14,9 +14,6 @@ function multiplyNumbersThatSumTo2020(numbers) {
       const number2 = numbers[i];
       const number3 = numbers.find(n => remainder - number2 === n);
       if (number3) {
-        console.log('number1', number1);
-        console.log('number2', number2);
-        console.log('number3', number3);
         return number1 * number2 * number3;
       }
     }
