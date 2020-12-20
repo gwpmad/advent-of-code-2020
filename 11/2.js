@@ -1,10 +1,10 @@
-const fs = require("fs");
-const seatingPlan = fs.readFileSync(__dirname + "/input", "utf8");
+const fs = require('fs');
+const seatingPlan = fs.readFileSync(__dirname + '/input', 'utf8');
 
-const FLOOR = ".", OCCUPIED = "#", VACANT = "L";
+const FLOOR = '.', OCCUPIED = '#', VACANT = 'L';
 
 function countChairsAfterChanges(input) {
-  let chairs = input.split("\n").map((l) => l.split(""));
+  let chairs = input.split('\n').map(l => l.split(''));
   let newChairs = cloneChairs(chairs);
   let occupiedChairsBefore = 0, occupiedChairs = 0;
   const incrementOccupiedChairs = increment => occupiedChairs += increment;
@@ -26,16 +26,17 @@ function musicalChairs(chairs, newChairs, incrementOccupiedChairs) {
 }
 
 function applyChairRules(coords, chairs, newChairs, incrementOccupiedChairs) {
-  const chair = chairs[coords[0]][coords[1]];
+  const [coord1, coord2] = coords;
+  const chair = chairs[coord1][coord2];
   if (chair === FLOOR) return;
 
   const visibleOccupiedChairs = getVisibleOccupiedChairs(coords, chairs);
   if (chair === VACANT && !visibleOccupiedChairs) {
-    newChairs[coords[0]][coords[1]] = OCCUPIED;
+    newChairs[coord1][coord2] = OCCUPIED;
     incrementOccupiedChairs(1);
   }
   if (chair === OCCUPIED && visibleOccupiedChairs > 4) {
-    newChairs[coords[0]][coords[1]] = VACANT
+    newChairs[coord1][coord2] = VACANT;
     incrementOccupiedChairs(-1);
   }
 }
@@ -45,13 +46,13 @@ function getVisibleOccupiedChairs(coords, chairs) {
   const increments = [-1, 0, 1];
   increments.forEach((verticalIncrement) => {
     increments.forEach((horizontalIncrement) => {
-      if (horizontalIncrement === 0 && verticalIncrement === 0) return;
+      if (verticalIncrement === 0 && horizontalIncrement === 0) return;
       
       for (
         let i = coords[0] + verticalIncrement, j = coords[1] + horizontalIncrement;
         i < chairs.length && i > -1 && j < chairs[0].length && j > -1;
         i += verticalIncrement, j += horizontalIncrement
-        ) {
+      ) {
         const chair = chairs[i][j];
         if (chair === FLOOR) continue;
         if (chair === OCCUPIED) visibleOccupiedChairs++;
