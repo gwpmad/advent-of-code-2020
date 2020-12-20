@@ -1,6 +1,6 @@
 const fs = require('fs');
-const seatingPlan = fs.readFileSync(__dirname + '/input', 'utf8');
 
+const seatingPlan = fs.readFileSync(__dirname + '/input', 'utf8');
 const FLOOR = '.', OCCUPIED = '#', VACANT = 'L';
 
 function countChairsAfterChanges(input) {
