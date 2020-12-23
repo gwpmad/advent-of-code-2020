@@ -52,9 +52,9 @@ function getGreatestCommonDivisor(x, y) {
   let [greater, lesser] = x > y ? [x, y] : [y, x];
   
   while (lesser) {
-      const tempLesser = lesser;
-      lesser = greater % lesser;
-      greater = tempLesser;
+    const tempLesser = lesser;
+    lesser = greater % lesser;
+    greater = tempLesser;
   }
   return BigInt(greater);
 }
