@@ -34,8 +34,7 @@ function calculateMaskedValue(int, mask) {
 }
 
 function get36BitValue(int) {
-  const bitValue = int.toString(2);
-  return '0'.repeat(NUMBER_OF_BITS - bitValue.length).concat(bitValue);
+  return int.toString(2).padStart(NUMBER_OF_BITS, '0');
 }
 
 function getSumOfValues(memory) {
