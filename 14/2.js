@@ -11,12 +11,12 @@ function storeAndSumValuesInMemory(input) {
   let mask, binaryPermutations;
   for (let i = 0; i < instructions.length; i++) {
     const instruction = instructions[i];
-    if (instruction.startsWith('mask')) {
-      mask = instruction.slice(NUMBER_OF_BITS * -1);
-      binaryPermutations = getFloatingBitPermutations(mask);
+    if (instruction.startsWith('mem')) {
+      saveValuesToMaskedAddresses(memory, instruction, mask, binaryPermutations);
       continue;
     }
-    saveValuesToMaskedAddresses(memory, instruction, mask, binaryPermutations);
+    mask = instruction.slice(NUMBER_OF_BITS * -1);
+    binaryPermutations = getFloatingBitPermutations(mask);
   }
   return getSumOfValues(memory);
 }
@@ -36,7 +36,7 @@ function getFloatingBitPermutations(mask) {
 function saveValuesToMaskedAddresses(memory, instruction, mask, binaryPermutations) {
   const [address, value] = instruction.match(/\d+/g).map(Number);
   const bitValue = get36BitValue(address);
-  return binaryPermutations.forEach(permutation => {
+  binaryPermutations.forEach(permutation => {
     const addressPermutation = getMaskedAddressPermutation(bitValue, mask, permutation);
     memory[addressPermutation] = value;
   });
