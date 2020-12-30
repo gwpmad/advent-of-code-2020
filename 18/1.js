@@ -14,7 +14,7 @@ function lineToArray(line) {
     return isNaN(char) ? `"${char}",` : `${char},`;
   }
 
-  const json = 
+  const json =
     ('[' + line.replace(/[0-9]+|\*|\+|\(|\)/g, charToJsonChar) + ']')
       .replace(/,\]/g, ']');
   return JSON.parse(json);
