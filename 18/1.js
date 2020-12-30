@@ -23,9 +23,9 @@ function lineToArray(line) {
 function calculateStatement(statement) {
   let total = Array.isArray(statement[0]) ? calculateStatement(statement[0]) : statement[0];
   for (let i = 2; i < statement.length; i += 2) {
-    let element = statement[i], operand = statement[i - 1];
-    if (Array.isArray(element)) element = calculateStatement(element);
-    total = operand === '+' ? total + element : total * element;
+    let operand = statement[i], operator = statement[i - 1];
+    if (Array.isArray(operand)) operand = calculateStatement(operand);
+    total = operator === '+' ? total + operand : total * operand;
   }
   return total;
 }

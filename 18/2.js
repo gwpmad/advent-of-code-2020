@@ -11,13 +11,13 @@ function doMathsWithAdditionFirst(statement) {
   for (let i = 0; i < statement.length;) {
     if (Array.isArray(statement[i])) statement[i] = doMathsWithAdditionFirst(statement[i]);
 
-    const element = statement[i], operand = statement[i - 1], previousElement = statement[i - 2];
-    if (operand !== '+') {
+    const operand = statement[i], operator = statement[i - 1], previousOperand = statement[i - 2];
+    if (operator !== '+') {
       i += 2;
       continue;
     }
 
-    statement[i] = previousElement + element;
+    statement[i] = previousOperand + operand;
     statement.splice(i - 2, 2);
   }
   return statement
