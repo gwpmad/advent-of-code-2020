@@ -10,19 +10,21 @@ function doAdvancedMathsHomework(input) {
 function doMathsWithAdditionFirst(statement) {
   for (let i = 0; i < statement.length;) {
     if (Array.isArray(statement[i])) statement[i] = doMathsWithAdditionFirst(statement[i]);
-
+    
     const operand = statement[i], operator = statement[i - 1], previousOperand = statement[i - 2];
     if (operator !== '+') {
       i += 2;
       continue;
     }
-
+    
     statement[i] = previousOperand + operand;
     statement.splice(i - 2, 2);
   }
   return statement
-    .filter(char => char !== '*')
-    .reduce((product, number) => product * number);
+    .reduce((product, number) => {
+      if (number === '*') return product;
+      return product * number;
+    });
 }
 
 function lineToArray(line) {
