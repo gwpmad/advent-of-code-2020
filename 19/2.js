@@ -1,7 +1,7 @@
 const fs = require('fs');
 const rulesAndMessages = fs.readFileSync(__dirname + '/input', 'utf8');
 
-const depth = 10;
+const depth = 4;
 
 function countMessagesFollowingRule(input, ruleNumber) {
   const [rules, messages] = input.split('\n\n');
@@ -41,29 +41,42 @@ function getRulesRegexes(unparsedRules) {
         parsedRule = rule.slice(1, rule.length - 1);
       } else {
         const tokens = rule.split(' ');
-        const selfReferencingRule = tokens.some(token => token === ruleNumber);
-        if (selfReferencingRule) {
+        const hasSelfReferencingRule = tokens.some(token => token === ruleNumber);
+        if (hasSelfReferencingRule) {
           const moreScanningNeededForSelfRefRule = 
-            tokens.slice(0, tokens.indexOf('|')).some(token => token !== '|' && !regexes.has(token));
+            tokens.slice(0, tokens.indexOf('|')).some(token => !regexes.has(token));
           if (moreScanningNeededForSelfRefRule) continue;
         } else if (tokens.some(token => token !== '|' && !regexes.has(token))) {
           continue;
         }
 
         parsedRule = tokens.reduce((string, token) => {
-          if (token === '|') return string.concat(')|(');
+          if (token === '|') return string.concat(token);
           if (token === ruleNumber) {
-            const addition = tokens.slice(0, tokens.indexOf('|')).map(earlierToken => regexes.get(earlierToken)).join('');
-            return string.concat(`(${addition}){1,${depth}}`);
+            const originalTokensAtAllQuantitiesUpToDepth = handleSelfReferencingRuleUpToDepth(tokens, regexes)
+            return string.concat(`(${originalTokensAtAllQuantitiesUpToDepth})`);
           };
           return string.concat(regexes.get(token));
         }, '');
       }
-      regexes.set(ruleNumber, `((${parsedRule}))`);
+      regexes.set(ruleNumber, `(${parsedRule})`);
       unparsedRules.delete(unparsedRule);
     }
   }
   return regexes;
 }
 
-console.log(countMessagesFollowingRule(rulesAndMessages, '0'));
+function handleSelfReferencingRuleUpToDepth(tokens, regexes) {
+  return [...Array(depth)]
+    .map((_, idx) => {
+      const originalTokensAtSpecifiedQuantity = tokens.slice(0, tokens.indexOf('|'))
+        .map(earlierToken => `${regexes.get(earlierToken)}{${idx + 1}}`)
+        .join('');
+      return `(${originalTokensAtSpecifiedQuantity})`;
+    })
+    .join('|');
+}
+
+if (countMessagesFollowingRule(rulesAndMessages, '0') !== 412) {
+  throw new Error('wrong')
+}
