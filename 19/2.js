@@ -77,6 +77,4 @@ function handleSelfReferencingRuleUpToDepth(tokens, regexes) {
     .join('|');
 }
 
-if (countMessagesFollowingRule(rulesAndMessages, '0') !== 412) {
-  throw new Error('wrong')
-}
+console.log(countMessagesFollowingRule(rulesAndMessages, '0'));
