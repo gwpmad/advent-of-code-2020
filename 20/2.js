@@ -2,17 +2,19 @@ function getBorderlessImage(input) {
   const rawTiles = input.split('\n\n');
   const bordersMap = createBordersMap(rawTiles);
   console.log('bordersMap', bordersMap)
-  const topLeftTileId = decideTopLeftTile(bordersMap)
-  const grid = populateGrid(rawTiles.length, bordersMap, topLeftTileId);
+  const topLeftTile = decideTopLeftTile(bordersMap)
+  const grid = populateGrid(rawTiles.length, bordersMap, topLeftTile);
 }
 
-function populateGrid(totalTiles, bordersMap, topLeftTileId) {
+function populateGrid(totalTiles, bordersMap, topLeftTile) {
   const borders = bordersMap.get('borders');
   const tiles = bordersMap.get('tiles');
   const grid = getGrid(totalTiles);
-  grid[0][0] = topLeftTileId;
+  grid[0][0] = topLeftTile;
+
+  // also save rotations and flips in the array slot
   for (let i = 1; i < grid[0].length; i++) {
-    const tileToTheLeftId = grid[0][i - 1];
+    const tileToTheLeftId = grid[0][i - 1].id;
     console.log('tiles.get(tileToTheLeftId)', tiles.get(tileToTheLeftId))
     const currentTileLeftBorder = tiles.get(tileToTheLeftId).right;
     console.log('borders.get(currentTileLeftBorder)', borders.get(currentTileLeftBorder))
@@ -37,26 +39,40 @@ function decideTopLeftTile(bordersMap) {
       }
     }
   }
-  const rotated = rotateTileUntilBorderIsTop(topLeftTileId, bordersMap, borderToGoTop);
+  const firstRotationResult = rotateTileUntilBorderIsTop(topLeftTileId, bordersMap, borderToGoTop);
+  const { rotated, flipped } = firstRotationResult;
+  let { rotations } = firstRotationResult;
   console.log('rotated.right', rotated.right)
   console.log('borders.get(rotated.right)', borders.get(rotated.right))
   if (borders.get(rotated.right).length === 1) {
-    rotateTileUntilBorderIsTop(topLeftTileId, bordersMap, rotated.right);
+    const secondRotationResult = rotateTileUntilBorderIsTop(topLeftTileId, bordersMap, rotated.right);
+    rotations = (rotations + secondRotationResult.rotations) % 4;
   }
-  return topLeftTileId;
+  return { id: topLeftTileId, rotations, flipped };
 }
 
 function rotateTileUntilBorderIsTop(tileId, bordersMap, borderToGoTop) {
+  let rotations = 0;
   let { left, right, top, bottom } = bordersMap.get('tiles').get(tileId);
-  while (top !== borderToGoTop) {
+  while (![top, reverseString(top)].includes(borderToGoTop)) {
     const tempTop = top;
     top = left;
     left = bottom;
     bottom = right;
     right = tempTop;
+    rotations++;
+  }
+  let flipped = false;
+  if (top !== borderToGoTop) {
+    flipped = true;
+    top = reverseString(top);
+    bottom = reverseString(bottom);
+    const tempLeft = left;
+    left = right;
+    right = tempLeft;
   }
   bordersMap.get('tiles').set(tileId, { left, right, top, bottom });
-  return bordersMap.get('tiles').get(tileId);
+  return { rotated: bordersMap.get('tiles').get(tileId), flipped, rotations };
 }
 
 function getGrid(totalTiles) {
