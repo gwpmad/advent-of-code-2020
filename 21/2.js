@@ -1,7 +1,5 @@
-const assert = require('assert');
 const fs = require('fs');
 const recipes = fs.readFileSync(__dirname + '/input', 'utf8');
-
 
 function getAllergenicIngredients(input) {
   const recipeLines = getRecipeData(input);
@@ -78,5 +76,4 @@ function outputIngredientsByAllergen(lookup) {
     .join(',');
 }
 
-assert.equal(getAllergenicIngredients(recipes), 'dhfng,pgblcd,xhkdc,ghlzj,dstct,nqbnmzx,ntggc,znrzgs');
-// console.log(getAllergenicIngredients(recipes));
+console.log(getAllergenicIngredients(recipes));
